@@ -97,6 +97,7 @@ if (counter) {
 const form = document.querySelector('.form-container');
 const deadline = document.getElementById('deadline');
 const targetScore = document.getElementById('target-score');
+const jenisToefl = document.getElementById('jenis-toefl');
 const continueBtn = document.getElementById('order-form-btn');
 
 // Contact navigation handler
@@ -120,14 +121,21 @@ if (continueBtn) {
         e.preventDefault();
         
         // Get form values
-        const deadlineValue = deadline.value || 'Belum diisi';
-        const targetScoreValue = targetScore.value || 'Belum diisi';
+        const jenisToeflValue = jenisToefl ? (jenisToefl.value.trim()) : '';
+        const deadlineValue = deadline ? (deadline.value.trim()) : '';
+        const targetScoreValue = targetScore ? (targetScore.value.trim()) : '';
+
+        if (!jenisToeflValue || !deadlineValue || !targetScoreValue) {
+            alert('Mohon lengkapi semua detail (Jenis, Tanggal, dan Target Score) terlebih dahulu!');
+            return;
+        }
         
         // Create WhatsApp message with form data
         let message = `Halo Admin JokiToeflYu! 👋
 
 Saya ingin memesan layanan joki TOEFL dengan detail:
 
+📝 Jenis TOEFL: ${jenisToeflValue}
 📅 Deadline: ${deadlineValue}
 🎯 Target Score: ${targetScoreValue}
 
@@ -139,7 +147,7 @@ Mohon informasi lebih lanjut mengenai harga dan proses pengerjaannya. Terima kas
     });
     
     // Handle Enter key press on form inputs
-    [deadline, targetScore].forEach(input => {
+    [jenisToefl, deadline, targetScore].forEach(input => {
         if (input) {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -192,12 +200,17 @@ const ctaButtons = document.querySelectorAll('.cta-button, .order-btn');
 ctaButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         e.preventDefault();
-        const message = `Halo Admin JokiToeflYu! 👋
-
-Saya ingin konsultasi mengenai layanan joki TOEFL. Mohon informasi lebih lanjut ya! 🙏`;
-        
-        const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
+        const targetForm = document.querySelector('.project-form');
+        if (targetForm) {
+            targetForm.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            setTimeout(() => {
+                const firstInput = document.getElementById('jenis-toefl');
+                if (firstInput) firstInput.focus();
+            }, 600);
+        }
     });
 });
 
